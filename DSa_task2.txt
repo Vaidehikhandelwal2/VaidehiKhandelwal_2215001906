@@ -1,0 +1,202 @@
+704.Binary Search
+class Solution {
+    public int search(int[] nums, int target) {
+        int high = nums.length - 1;
+        int low = 0;
+        if (low <= high) {
+            while (low <= high) {  
+                int mid = (high + low) / 2;
+                if (target == nums[mid]) {
+                    return mid;
+                } else if (target > nums[mid]) {
+                    low = mid + 1;
+                } else {
+                    high = mid - 1;
+                }
+            }
+        }
+        
+        return -1;
+    }
+}
+--------------------------
+
+35. Search Insert Position
+
+class Solution {
+    public int searchInsert(int[] nums, int target) {
+        int low = 0;
+        int high = nums.length-1;
+
+        while (low <= high) {
+            int mid = low + (high-low)/2;
+            if (nums[mid] == target) 
+            return mid;
+            else if (nums[mid] > target) 
+            high = mid-1;
+            else 
+            low = mid+1;
+        }
+
+        return low;
+    }
+}
+
+-----------------
+74.Search a 2D Matrix
+
+class Solution {
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int rowStart = 0;
+        int rowEnd = matrix.length - 1;
+        int lastColumnIndex = matrix[0].length - 1;
+        int potentialRow = -1;
+
+        while (rowStart <= rowEnd) {
+            int midRow = rowStart + (rowEnd - rowStart) / 2;
+            if (matrix[midRow][lastColumnIndex] == target) return true;
+            else if (matrix[midRow][lastColumnIndex] < target) {
+                rowStart = midRow + 1;
+            } else {
+                potentialRow = midRow;
+                rowEnd = midRow - 1;
+            }
+        }
+        
+        return potentialRow != -1 ? binarySearch(matrix[potentialRow], target) : false;
+    }
+
+    private boolean binarySearch(int[] row, int target) {
+        int left = 0;
+        int right = row.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (row[mid] == target) return true;
+            if (row[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return false;
+    }
+}
+-----------------------------
+
+69. Sqrt(x)
+
+import java.util.*;
+class Solution {
+    public int mySqrt(int x) {
+        if(x==0 || x==1){
+            return x;
+        }
+        int low=1;
+        int high=x;
+        int mid=-1;
+      while(low<=high)       {
+        mid= low+(high-low)/2;
+        if(mid*mid==x){
+            return  mid;
+        }
+        else if((long)mid*mid>(long)x){
+            high =mid-1;
+        }
+        else{
+            low=mid+1;
+        }
+    }
+        return Math.round(high);
+      }
+    }
+------------------
+
+34. Find First and Last Position of Element in Sorted Array
+
+class Solution {
+    public int[] searchRange(int[] numbers, int target) {
+        int left = 0;
+        int right = numbers.length - 1;
+        
+        while (left <= right) {
+            int middle = left + (right - left) / 2;
+            
+            if (numbers[middle] > target) {
+                right = middle - 1;
+            } else if (numbers[middle] < target) {
+                left = middle + 1;
+            } else {
+                int startIndex = middle;
+                int endIndex = middle;
+                
+                for (int offsetLeft = 1; offsetLeft <= middle; offsetLeft++) {
+                    if (numbers[middle - offsetLeft] != target) break;
+                    startIndex = middle - offsetLeft;
+                }
+                
+                for (int offsetRight = 1; offsetRight < numbers.length - middle; offsetRight++) {
+                    if (numbers[middle + offsetRight] != target) break;
+                    endIndex = middle + offsetRight;
+                }
+                
+                return new int[]{startIndex, endIndex};
+            }
+        }
+        
+        return new int[]{-1, -1};
+    }
+}
+
+
+------------------------------
+4. Median of Two Sorted Arrays
+
+
+public class Solution {
+    public double findMedianSortedArrays(int[] array1, int[] array2) {
+        if (array1.length > array2.length) {
+            return findMedianSortedArrays(array2, array1);
+        }
+
+        int length1 = array1.length;
+        int length2 = array2.length;
+        int leftPointer = 0, rightPointer = length1, halfLength = (length1 + length2 + 1) / 2;
+
+        while (leftPointer <= rightPointer) {
+            int mid1 = (leftPointer + rightPointer) / 2;
+            int mid2 = halfLength - mid1;
+
+            if (mid1 < rightPointer && array1[mid1] < array2[mid2 - 1]) {
+                leftPointer = mid1 + 1;
+            } else if (mid1 > leftPointer && array1[mid1 - 1] > array2[mid2]) {
+                rightPointer = mid1 - 1;
+            } else {
+                int maxLeft = 0;
+                if (mid1 == 0) {
+                    maxLeft = array2[mid2 - 1];
+                } else if (mid2 == 0) {
+                    maxLeft = array1[mid1 - 1];
+                } else {
+                    maxLeft = Math.max(array1[mid1 - 1], array2[mid2 - 1]);
+                }
+
+                if ((length1 + length2) % 2 == 1) {
+                    return maxLeft;
+                }
+
+                int minRight = 0;
+                if (mid1 == length1) {
+                    minRight = array2[mid2];
+                } else if (mid2 == length2) {
+                    minRight = array1[mid1];
+                } else {
+                    minRight = Math.min(array1[mid1], array2[mid2]);
+                }
+
+                return (maxLeft + minRight) / 2.0;
+            }
+        }
+
+        return 0.0;
+    }
+}
